@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from django.shortcuts import render
 from django.http import JsonResponse
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .serializers import (
@@ -9,8 +10,8 @@ from .serializers import (
     DetalleFacturaSerializer
 )
 
-#def home(request):
- #   return JsonResponse({"message": "Task Manager API"})
+def home(request):
+    return render(request, 'index.html')
 
 class ClienteViewSet(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
