@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Factura</title>
+</head>
+<body>
+    <h1>Factura</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <label for="cliente">Cliente:</label><br>
+        <select id="cliente" name="cliente" required>
+            <option value="">Seleccione un cliente</option>
+            {% for cliente in clientes %}
+                <option value="{{ cliente.id }}">{{ cliente.nombre }} (ID {{ cliente.id }})</option>
+            {% endfor %}
+        </select><br>
+
+
+        <h3>Detalle de Productos</h3>
+        <div id="detalles">
+            <div class="detalle">
+                <label>Producto:</label>
+                <select name="productos[]" required>
+                    <option value="">Seleccione un producto</option>
+                    {% for producto in productos %}
+                        <option value="{{ producto.id }}">{{ producto.nombre }} (ID {{ producto.id }})</option>
+                    {% endfor %}
+                </select>
+
+                <label>Cantidad:</label>
+                <input type="number" name="cantidades[]" min="1" required>
+                <br><br>
+            </div>
+        </div>
+
+        <button type="button" onclick="agregarDetalle()">Agregar otro producto</button><br><br>
+        <button type="submit">Guardar Factura</button>
+    </form><br>
+
+    <a href="/">Volver al inicio</a>
+
+    <script>
+        const productosOptions = `
+            {% for producto in productos %}
+                <option value="{{ producto.id }}">{{ producto.nombre }} (ID {{ producto.id }})</option>
+            {% endfor %}
+        `;
+
+        function agregarDetalle() {
+            const contenedor = document.getElementById('detalles');
+            const nuevoDetalle = document.createElement('div');
+            nuevoDetalle.classList.add('detalle');
+            nuevoDetalle.innerHTML = `
+                <label>Producto:</label>
+                <select name="productos[]" required>
+                    <option value="">Seleccione un producto</option>
+                    ${productosOptions}
+                </select>
+
+                <label>Cantidad:</label>
+                <input type="number" name="cantidades[]" min="1" required>
+                <br><br>
+            `;
+            contenedor.appendChild(nuevoDetalle);
+        }
+    </script>
+</body>
+</html>

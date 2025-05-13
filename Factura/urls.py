@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from Facturapp.views import ClienteViewSet, ProductoViewSet, FacturaViewSet, DetalleFacturaViewSet, home
+from Facturapp.views import ClienteViewSet, ProductoViewSet, FacturaViewSet, DetalleFacturaViewSet, home, login_view, logout_view
 
 router = DefaultRouter()
 router.register(r'clientes', ClienteViewSet)
@@ -26,9 +26,12 @@ router.register(r'facturas', FacturaViewSet)
 router.register(r'detalles', DetalleFacturaViewSet)
 
 urlpatterns = [
+    path('login/', login_view, name='login'),
+    path('logout/', logout_view, name='logout'),
     path('', home, name='home'),  
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),
+    path('api/', include('Facturapp.urls')),
+    path('', include('Facturapp.urls')),
 ]
 
 

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Facturas Registradas</title>
+</head>
+<body>
+    <h1>Facturas Registradas</h1>
+
+    {% if facturas %}
+        {% for factura in facturas %}
+            <div style="border:1px solid #000; padding:10px; margin-bottom:10px;">
+                <strong>Factura ID:</strong> {{ factura.id }}<br>
+                <strong>Cliente:</strong> {{ factura.cliente.nombre }} | <strong>RNC: </strong> {{factura.cliente.rnc}}<br>
+                <strong>Fecha de emisión:</strong> {{ factura.fecha_emision }}<br>
+                <strong>Total:</strong> {{ factura.total }}<br>
+                <h4>Productos:</h4>
+                <ul>
+                    {% for detalle in factura.detallefactura_set.all %}
+                        <li>{{ detalle.producto.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No hay facturas registradas.</p>
+    {% endif %}
+
+    <a href="/">Volver al inicio</a>
+</body>
+</html>

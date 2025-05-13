@@ -38,8 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    #'rest_framework.authtoken',
     'Facturapp',
 ]
+
+LOGIN_URL = '/login/'
+## TOKEN
+########
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
