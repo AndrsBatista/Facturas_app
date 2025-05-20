@@ -1,31 +1,41 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Facturas Registradas</title>
-</head>
-<body>
-    <h1>Facturas Registradas</h1>
+{% extends "base.html" %}
+
+{% block title %}Facturas Registradas{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Facturas Registradas</h1>
 
     {% if facturas %}
-        {% for factura in facturas %}
-            <div style="border:1px solid #000; padding:10px; margin-bottom:10px;">
-                <strong>Factura ID:</strong> {{ factura.id }}<br>
-                <strong>Cliente:</strong> {{ factura.cliente.nombre }} | <strong>RNC: </strong> {{factura.cliente.rnc}}<br>
-                <strong>Fecha de emisión:</strong> {{ factura.fecha_emision }}<br>
-                <strong>Total:</strong> {{ factura.total }}<br>
-                <h4>Productos:</h4>
-                <ul>
-                    {% for detalle in factura.detallefactura_set.all %}
-                        <li>{{ detalle.producto.nombre }} - Cantidad: {{ detalle.cantidad }}</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        {% endfor %}
+        <div class="row">
+            {% for factura in facturas %}
+                <div class="col-md-6 mb-4">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Factura ID: {{ factura.id }}</h5>
+                            <p class="card-text mb-1">
+                                <strong>Cliente:</strong> {{ factura.cliente.nombre }} <br>
+                                <strong>RNC:</strong> {{ factura.cliente.rnc }}
+                            </p>
+                            <p class="card-text mb-1"><strong>Fecha de emisión:</strong> {{ factura.fecha_emision }}</p>
+                            <p class="card-text mb-1"><strong>Cantidad de Productos:</strong> {{ factura.cantidad_productos }}</p>
+                            <p class="card-text mb-3"><strong>Total:</strong> ${{ factura.total }}</p>
+                            <h6>Productos:</h6>
+                            <ul class="list-group list-group-flush">
+                                {% for detalle in factura.detallefactura_set.all %}
+                                    <li class="list-group-item px-0">
+                                        {{ detalle.producto.nombre }} - Cantidad: {{ detalle.cantidad }}
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                            <a href="{% url 'factura_pdf' factura.id %}" class="btn btn-sm btn-outline-primary mt-3">Descargar PDF</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
         <p>No hay facturas registradas.</p>
     {% endif %}
-
-    <a href="/">Volver al inicio</a>
-</body>
-</html>
+    
+    <a href="/" class="btn btn-primary mt-3">Volver al inicio</a>
+{% endblock %}

@@ -2,7 +2,6 @@ from django.db import models
 
 class Cliente(models.Model):
     nombre = models.CharField(max_length=255)
-    direccion = models.TextField()
     rnc = models.CharField(max_length=11, unique=True)
 
     def __str__(self):

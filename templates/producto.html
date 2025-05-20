@@ -1,25 +1,56 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Productos</title>
-</head>
-<body>
-    <h1>Productos</h1>
+{% extends "base.html" %}
 
-    <form method="post">
+{% block title %}Productos{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Productos</h1>
+
+    <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
-        <label for="nombre">Nombre:</label><br>
-        <input type="text" id="nombre" name="nombre" required><br><br>
 
-        <label for="descripcion">Descripción:</label><br>
-        <textarea id="descripcion" name="descripcion" rows="4" cols="50" required></textarea><br><br>
+        <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" class="form-control" required>
+            <div class="invalid-feedback">
+                Por favor, ingrese el nombre del producto.
+            </div>
+        </div>
 
-        <label for="precio">Precio:</label><br>
-        <input type="text" id="precio" name="precio" pattern="\d+" title="Solo se permiten números" required><br><br>
+        <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" rows="4" class="form-control" required></textarea>
+            <div class="invalid-feedback">
+                Por favor, ingrese la descripción.
+            </div>
+        </div>
 
-        <button type="submit">Guardar</button>
+        <div class="mb-3">
+            <label for="precio" class="form-label">Precio:</label>
+            <input type="text" id="precio" name="precio" pattern="\d+" class="form-control" 
+                   title="Solo se permiten números" required>
+            <div class="invalid-feedback">
+                Solo se permiten números para el precio.
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar</button>
     </form>
 
-    <a href="/">Volver al inicio</a>
-</body>
-</html>
+    <a href="/" class="btn btn-link mt-3">Volver al inicio</a>
+
+    <script>
+    (function () {
+      'use strict'
+      var forms = document.querySelectorAll('.needs-validation')
+      Array.prototype.slice.call(forms).forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+          if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+          }
+          form.classList.add('was-validated')
+        }, false)
+      })
+    })()
+    </script>
+{% endblock %}

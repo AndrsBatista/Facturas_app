@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h1>Factura ID: {{ factura.id }}</h1>
+    <p><strong>Cliente:</strong> {{ factura.cliente.nombre }}</p>
+    <p><strong>RNC:</strong> {{ factura.cliente.rnc }}</p>
+    <p><strong>Fecha:</strong> {{ factura.fecha_emision }}</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio Unitario</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for detalle in factura.detallefactura_set.all %}
+            <tr>
+                <td>{{ detalle.producto.nombre }}</td>
+                <td>{{ detalle.cantidad }}</td>
+                <td>${{ detalle.producto.precio }}</td>
+                <td>Unidades: {{ detalle.cantidad }} <br>
+                  Total RD$: {{ detalle.subtotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><strong>Total:</strong> ${{ factura.total }}</p>
+</body>
+</html>

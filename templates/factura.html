@@ -1,46 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <title>Crear Factura</title>
-</head>
-<body>
-    <h1>Factura</h1>
+{% extends "base.html" %}
 
-    <form method="post">
+{% block title %}Crear Factura{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Factura</h1>
+
+    <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
 
-        <label for="cliente">Cliente:</label><br>
-        <select id="cliente" name="cliente" required>
-            <option value="">Seleccione un cliente</option>
-            {% for cliente in clientes %}
-                <option value="{{ cliente.id }}">{{ cliente.nombre }} (ID {{ cliente.id }})</option>
-            {% endfor %}
-        </select><br>
-
+        <!-- Selección de cliente con Bootstrap -->
+        <div class="mb-3">
+            <label for="cliente" class="form-label">Cliente:</label>
+            <select id="cliente" name="cliente" class="form-select" required>
+                <option value="">Seleccione un cliente</option>
+                {% for cliente in clientes %}
+                    <option value="{{ cliente.id }}">{{ cliente.nombre }} (ID {{ cliente.id }})</option>
+                {% endfor %}
+            </select>
+            <div class="invalid-feedback">Debe seleccionar un cliente.</div>
+        </div>
 
         <h3>Detalle de Productos</h3>
         <div id="detalles">
-            <div class="detalle">
-                <label>Producto:</label>
-                <select name="productos[]" required>
+            <div class="detalle mb-3">
+                <label class="form-label">Producto:</label>
+                <select name="productos[]" class="form-select" required>
                     <option value="">Seleccione un producto</option>
                     {% for producto in productos %}
-                        <option value="{{ producto.id }}">{{ producto.nombre }} (ID {{ producto.id }})</option>
+                        <option value="{{ producto.id }}">{{ producto.nombre }} - RD${{ producto.precio}}</option>
                     {% endfor %}
                 </select>
-
-                <label>Cantidad:</label>
-                <input type="number" name="cantidades[]" min="1" required>
-                <br><br>
+                <label class="form-label mt-2">Cantidad:</label>
+                <input type="number" name="cantidades[]" min="1" class="form-control" required>
             </div>
         </div>
 
-        <button type="button" onclick="agregarDetalle()">Agregar otro producto</button><br><br>
-        <button type="submit">Guardar Factura</button>
-    </form><br>
+        <button type="button" class="btn btn-secondary mb-3" onclick="agregarDetalle()">Agregar otro producto</button><br>
 
-    <a href="/">Volver al inicio</a>
+        <button type="submit" class="btn btn-primary">Guardar Factura</button>
+    </form>
+    <a href="/" class="btn btn-link mt-3 d-inline-block">Volver al inicio</a>
 
     <script>
         const productosOptions = `
@@ -52,20 +51,32 @@
         function agregarDetalle() {
             const contenedor = document.getElementById('detalles');
             const nuevoDetalle = document.createElement('div');
-            nuevoDetalle.classList.add('detalle');
+            nuevoDetalle.classList.add('detalle', 'mb-3');
             nuevoDetalle.innerHTML = `
-                <label>Producto:</label>
-                <select name="productos[]" required>
+                <label class="form-label">Producto:</label>
+                <select name="productos[]" class="form-select" required>
                     <option value="">Seleccione un producto</option>
                     ${productosOptions}
                 </select>
-
-                <label>Cantidad:</label>
-                <input type="number" name="cantidades[]" min="1" required>
-                <br><br>
+                <label class="form-label mt-2">Cantidad:</label>
+                <input type="number" name="cantidades[]" min="1" class="form-control" required>
             `;
             contenedor.appendChild(nuevoDetalle);
         }
+
+        // Bootstrap form validation script
+        (function () {
+          'use strict'
+          var forms = document.querySelectorAll('.needs-validation')
+          Array.prototype.slice.call(forms).forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+              if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+              }
+              form.classList.add('was-validated')
+            }, false)
+          })
+        })()
     </script>
-</body>
-</html>
+{% endblock %}

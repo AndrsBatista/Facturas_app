@@ -15,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.response import Response
+from .forms import LoginForm
 
 @login_required
 def home(request):
@@ -57,7 +58,6 @@ from .models import Cliente
 def registrar_cliente(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
-        direccion = request.POST.get('direccion')
         rnc = request.POST.get('rnc')
 
         #Validación RNC
@@ -65,10 +65,18 @@ def registrar_cliente(request):
             return render(request, 'cliente.html', {
                 'error': 'El RNC debe contener exactamente 11 dígitos numéricos.',
                 'nombre': nombre,
-                'direccion': direccion,
                 'rnc': rnc
             })
-        Cliente.objects.create(nombre=nombre, direccion=direccion, rnc=rnc)
+        
+
+        # Verificar si el RNC ya existe
+        if Cliente.objects.filter(rnc=rnc).exists():
+            return render(request, 'cliente.html', {
+                'error': 'Ya existe un cliente con este RNC. Por favor, ingrese otro.',
+                'nombre': nombre,
+                'rnc': rnc
+            })
+        Cliente.objects.create(nombre=nombre, rnc=rnc)
         return redirect('factura')
 
     return render(request, 'cliente.html')
@@ -117,21 +125,35 @@ def registrar_factura(request):
 @login_required
 def ver_facturas(request):
     facturas = Factura.objects.all().prefetch_related('detallefactura_set', 'cliente')
+
+    for factura in facturas:
+        total_productos = sum(detalle.cantidad for detalle in factura.detallefactura_set.all())
+        factura.cantidad_productos = total_productos
+
     return render(request, 'ver_facturas.html', {'facturas': facturas})
 
+#LOGIN
 from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from django.contrib.auth import authenticate, login
+from .forms import LoginForm
 
 def login_view(request):
-    if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+    form = LoginForm(request.POST or None)
+    error = None
+
+    if request.method == 'POST' and form.is_valid():
+        username = form.cleaned_data['username']
+        password = form.cleaned_data['password']
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('home')  # Redirige a la página de inicio o dashboard
+            return redirect('home')
         else:
-            return render(request, 'login.html', {'error': 'Credenciales incorrectas'})
-    return render(request, 'login.html')
+            error = "Credenciales incorrectas"
+
+    return render(request, 'login.html', {'form': form, 'error': error})
+
 
 def logout_view(request):
     logout(request)
@@ -149,3 +171,21 @@ class CustomAuthToken(ObtainAuthToken):
             'user_id': user.id,
             'username': user.username
         })
+    
+#EXPORTACIÓN A PDF
+from django.template.loader import get_template
+from xhtml2pdf import pisa #NOTA: "Pisa" se encarga de convertir HTML a PDF
+
+def generar_pdf_factura(request, factura_id):
+    factura = Factura.objects.get(id=factura_id)
+    template = get_template('pdf_factura.html')
+    html = template.render({'factura': factura})
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="factura_{factura_id}.pdf"'
+
+    pisa_status = pisa.CreatePDF(html, dest=response)
+
+    if pisa_status.err:
+        return HttpResponse('Error al generar PDF', status=500)
+    return response

@@ -3,3 +3,6 @@ Django==5.2
 djangorestframework==3.16.0
 psycopg2-binary==2.9.10
 sqlparse==0.5.3
+django-crispy-forms
+crispy-bootstrap5
+xhtml2pdf>=0.2.5
