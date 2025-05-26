@@ -10,6 +10,7 @@ Aplicación web desarrollada con Django (Python) para la gestión de facturas de
 - Validación de formularios
 - CRUD completo con Django Admin
 - Conexión a base de datos (SQLite o PostgreSQL)
+- Login con Django Authentication
 
 # Tecnologías utilizadas
 
