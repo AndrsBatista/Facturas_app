@@ -5,16 +5,18 @@
 
 {% block content %}
 <br><br><br>
-<div class="text-center">
-    <h1 class="display-4">Facturación</h1>
+<div class="card shadow p-5">
+    <div class="text-center">
+     <h1 class="display-4">Facturación</h1>
 
-    <nav class="my-4">
-        <a href="/cliente/" class="btn btn-primary m-2">Clientes</a>
-        <a href="/producto/" class="btn btn-primary m-2">Productos</a>
-        <a href="/factura/" class="btn btn-primary m-2">Facturas</a>
-        <a href="/ver-facturas/" class="btn btn-primary m-2">Ver Facturas</a>
-    </nav>
+        <nav class="my-4">
+           <a href="/cliente/" class="btn btn-primary m-2">Clientes</a>
+         <a href="/producto/" class="btn btn-primary m-2">Productos</a>
+          <a href="/factura/" class="btn btn-primary m-2">Facturas</a>
+          <a href="/ver-facturas/" class="btn btn-primary m-2">Ver Facturas</a>
+     </nav>
 
-    <button class="btn btn-danger mt-3" onclick="window.location.href='/logout/';">Cerrar Sesión</button>
+     <button class="btn btn-danger mt-3" onclick="window.location.href='/logout/';">Cerrar Sesión</button>
+    </div>
 </div>
 {% endblock %}

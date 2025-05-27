@@ -9,6 +9,12 @@
     <p><strong>RNC:</strong> {{ factura.cliente.rnc }}</p>
     <p><strong>Fecha:</strong> {{ factura.fecha_emision }}</p>
 
+    <style>
+        th{
+            text-align: left;
+        }
+    </style>
+
     <table>
         <thead>
             <tr>
@@ -24,8 +30,7 @@
                 <td>{{ detalle.producto.nombre }}</td>
                 <td>{{ detalle.cantidad }}</td>
                 <td>${{ detalle.producto.precio }}</td>
-                <td>Unidades: {{ detalle.cantidad }} <br>
-                  Total RD$: {{ detalle.subtotal }}</td>
+                <td>Unidades: {{ detalle.cantidad }} <br> || Total RD$: {{ detalle.subtotal }}</td> <br>
             </tr>
             {% endfor %}
         </tbody>

@@ -1,19 +1,19 @@
 from rest_framework import serializers
 from .models import Cliente, Producto, Factura, DetalleFactura
 
-# --- Cliente ---
+#Cliente
 class ClienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cliente
         fields = ['id', 'nombre', 'rnc']
 
-# --- Producto ---
+#Producto
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Producto
         fields = ['id', 'nombre', 'descripcion', 'precio']
 
-# --- Detalle de Factura ---
+#Detalle de Factura
 class DetalleFacturaSerializer(serializers.ModelSerializer):
     factura = serializers.PrimaryKeyRelatedField(queryset=Factura.objects.all())
     producto = serializers.PrimaryKeyRelatedField(queryset=Producto.objects.all())
@@ -23,7 +23,7 @@ class DetalleFacturaSerializer(serializers.ModelSerializer):
         model = DetalleFactura
         fields = ['id', 'factura', 'producto', 'cantidad', 'subtotal']
 
-# --- Factura ---
+#Factura
 class FacturaSerializer(serializers.ModelSerializer):
     productos = serializers.SerializerMethodField()
     cliente = serializers.PrimaryKeyRelatedField(queryset=Cliente.objects.all())
@@ -37,7 +37,7 @@ class FacturaSerializer(serializers.ModelSerializer):
         detalles = DetalleFactura.objects.filter(factura=obj)
         return DetalleFacturaSerializer(detalles, many=True).data
 
-# --- Crear Factura ---
+#Crear Factura
 class FacturaCreateSerializer(serializers.ModelSerializer):
     productos = serializers.ListField(
         child=serializers.DictField(), write_only=True
