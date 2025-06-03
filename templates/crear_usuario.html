@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Crear Usuario{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Crear Nuevo Usuario</h2>
+
+<form method="post" class="bg-dark p-4 rounded">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="username" class="form-label">Nombre de Usuario:</label>
+        <input type="text" name="username" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Contraseña:</label>
+        <input type="password" name="password" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="grupo" class="form-label">Rol:</label>
+        <select name="grupo" class="form-select" required>
+            <option value="Admins">ADMIN</option>
+            <option value="UsuariosNormales">UsuariosNormales</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+</form>
+{% endblock %}

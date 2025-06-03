@@ -19,14 +19,14 @@ from .forms import LoginForm
 
 @login_required
 def home(request):
-    if request.user.is_superuser:
+    if request.user.is_superuser or request.user.groups.filter(name='Admins').exists():
          return redirect('/admin-dashboard/')
     if request.user.groups.filter(name='UsuariosNormales').exists():
         return redirect('/usuario-dashboard/')
     return render(request, 'index.html')
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser)
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
 def admin_dashboard(request):
     return render(request, 'admin_dashboard.html')
 
@@ -34,7 +34,6 @@ def admin_dashboard(request):
 @user_passes_test(lambda u: u.groups.filter(name='UsuariosNormales').exists())
 def usuario_dashboard(request):
     return render(request, 'usuario_dashboard.html')
-
 
 class ClienteViewSet(viewsets.ModelViewSet):
     queryset = Cliente.objects.all()
@@ -60,9 +59,39 @@ class FacturaViewSet(viewsets.ModelViewSet):
 #NOTA: Decorador para restricción de acceso por grupo
 def admin_required(view_func):
     return user_passes_test(
-        lambda u: u.is_authenticated and (u.is_staff or u.is_superuser),
+        lambda u: u.is_authenticated and (
+            u.is_staff or 
+            u.is_superuser) or
+            u.groups.filter(name='Admins').exists(),
         login_url='/',
     )(view_func)
+
+from django.contrib.auth.models import User, Group
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def crear_usuario(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        grupo_nombre = request.POST['grupo']
+
+        user = User.objects.create_user(username=username, password=password)
+
+        if grupo_nombre == 'Admins':
+            user.is_staff = True
+            user.is_superuser = True
+        else:
+            user.is_staff = False
+            user.is_superuser = False   
+        user.save()
+        
+        grupo = Group.objects.get(name=grupo_nombre)
+        user.groups.add(grupo)
+
+        return redirect('home')
+    return render(request, 'crear_usuario.html')
+
 
     
 from django.http import HttpResponse

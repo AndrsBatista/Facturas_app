@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import  home, registrar_cliente, registrar_producto, registrar_factura, ver_facturas, generar_pdf_factura, usuario_dashboard, admin_dashboard #acceso_denegado
+from .views import  home, registrar_cliente, registrar_producto, registrar_factura, ver_facturas, generar_pdf_factura, usuario_dashboard, admin_dashboard, crear_usuario 
 from .views import CustomAuthToken
 
 router = DefaultRouter()
@@ -15,5 +15,6 @@ urlpatterns = [
     path('factura/', registrar_factura, name='factura'),
     path('ver-facturas/', ver_facturas, name='ver_facturas'),
     path('factura/<int:factura_id>/', generar_pdf_factura, name='factura_pdf'),
-   # path('acceso-denegado/', acceso_denegado, name='acceso_denegado'),
+    path('crear-usuario/', crear_usuario, name='crear_usuario'),
+    path('', home, name='home'),
 ]
