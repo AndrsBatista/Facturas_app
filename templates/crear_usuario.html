@@ -9,23 +9,25 @@
     {% csrf_token %}
 
     <div class="mb-3">
-        <label for="username" class="form-label">Nombre de Usuario:</label>
+        <label for="username" class="form-label" style="color: black">Nombre de Usuario:</label>
         <input type="text" name="username" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label for="password" class="form-label">Contraseña:</label>
+        <label for="password" class="form-label" style="color: black">Contraseña:</label>
         <input type="password" name="password" class="form-control" required>
     </div>
 
     <div class="mb-3">
-        <label for="grupo" class="form-label">Rol:</label>
+        <label for="grupo" class="form-label" style="color: black">Rol:</label>
         <select name="grupo" class="form-select" required>
-            <option value="Admins">ADMIN</option>
-            <option value="UsuariosNormales">UsuariosNormales</option>
+            <option value="Admins">Administrador</option>
+            <option value="UsuariosNormales">Usuario</option>
         </select>
     </div>
 
     <button type="submit" class="btn btn-primary">Crear Usuario</button>
 </form>
+
+<a href="/" class="btn btn-link mt-3">Volver al inicio</a>
 {% endblock %}
