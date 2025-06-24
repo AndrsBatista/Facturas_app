@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Editar Usuario</h2>
+
+    <form method="post" class="bg-dark p-4 rounded">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="username" class="form-label" style="color: black">Nombre de Usuario:</label>
+            <input type="text" name="username" class="form-control" value="{{ usuario.username }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label" style="color: black">Nueva Contraseña (opcional):</label>
+            <input type="password" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
+        </div>
+
+        <div class="mb-3">
+            <label for="grupo" class="form-label" style="color: black">Rol:</label>
+            <select name="grupo" class="form-select" required>
+                <option value="Admins" {% if grupo_actual == 'Admins' %}selected{% endif %}>Administrador</option>
+                <option value="UsuariosNormales" {% if grupo_actual == 'UsuariosNormales' %}selected{% endif %}>Usuario</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <a href="{% url 'usuario_list' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

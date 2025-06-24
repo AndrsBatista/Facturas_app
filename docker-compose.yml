@@ -31,7 +31,7 @@ services:
     container_name: pgadmin_facturas
     restart: always
     environment:
-      PGADMIN_DEFAULT_EMAIL: postgre@example.com
+      PGADMIN_DEFAULT_EMAIL: postgre@example.com 
       PGADMIN_DEFAULT_PASSWORD: Caasd21215@@
     ports:
       - "5051:80"

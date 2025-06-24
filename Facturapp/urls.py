@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import  home, registrar_cliente, registrar_producto, registrar_factura, ver_facturas, generar_pdf_factura, usuario_dashboard, admin_dashboard, crear_usuario 
+from .views import  home, registrar_cliente, registrar_producto, registrar_factura, ver_facturas, generar_pdf_factura, usuario_dashboard, admin_dashboard, crear_usuario, editar_usuario, usuario_list, borrar_usuario
 from .views import CustomAuthToken
 
 router = DefaultRouter()
@@ -16,5 +16,8 @@ urlpatterns = [
     path('ver-facturas/', ver_facturas, name='ver_facturas'),
     path('factura/<int:factura_id>/', generar_pdf_factura, name='factura_pdf'),
     path('crear-usuario/', crear_usuario, name='crear_usuario'),
+    path('editar-usuario/<int:user_id>/', editar_usuario, name='editar_usuario'),
+    path('borrar-usuario/<int:user_id>/', borrar_usuario, name='borrar_usuario'),
+    path('usuarios/', usuario_list, name='usuario_list'),
     path('', home, name='home'),
 ]

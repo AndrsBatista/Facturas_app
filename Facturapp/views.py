@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cliente, Producto, Factura, DetalleFactura
 from .serializers import (
     ClienteSerializer,
@@ -66,6 +66,13 @@ def admin_required(view_func):
         login_url='/',
     )(view_func)
 
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def usuario_list(request):
+    usuarios = User.objects.all()
+    return render(request, 'vista_usuarios.html', {'usuarios': usuarios})
+
 from django.contrib.auth.models import User, Group
 @login_required
 @admin_required
@@ -92,6 +99,49 @@ def crear_usuario(request):
         return redirect('home')
     return render(request, 'crear_usuario.html')
 
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def editar_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id)
+
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        grupo_nombre = request.POST['grupo']
+
+        usuario.username = username
+        if password:
+            usuario.set_password(password)
+
+        if grupo_nombre == 'Admins':
+            usuario.is_staff = True
+            usuario.is_superuser = True
+        else:
+            usuario.is_staff = False
+            usuario.is_superuser = False
+
+        usuario.save()
+
+        grupo = Group.objects.get(name=grupo_nombre)
+        usuario.groups.clear()
+        usuario.groups.add(grupo)
+
+        return redirect('usuario_list')
+
+    grupo_actual = usuario.groups.first().name if usuario.groups.exists() else ''
+    return render(request, 'editar_usuario.html', {
+        'usuario': usuario,
+        'grupo_actual': grupo_actual
+    })
+
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def borrar_usuario(request, user_id):
+    usuario = get_object_or_404(User, id=user_id)
+    usuario.delete()
+    return redirect('usuario_list')
 
     
 from django.http import HttpResponse
