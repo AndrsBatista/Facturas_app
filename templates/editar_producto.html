@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editar Usuario{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Editar Usuario</h2>
+
+    <form method="post" class="bg-dark p-4 rounded">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="nombre" class="form-label" style="color: black">Nombre del Producto:</label>
+            <input type="text" name="nombre" class="form-control" value="{{ producto.nombre }}" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="descripcion" class="form-label" style="color: black">Descripción:</label>
+            <textarea name="descripcion" rows="4" class="form-control" required>{{ producto.descripcion }}</textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="producto" class="form-label" style="color: black">Precio:</label>
+            <input type="text" name="precio" class="form-control" value="{{ producto.precio }}" required>
+        </div>
+            </select>
+        </div><br>
+        <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        <a href="{% url 'producto' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

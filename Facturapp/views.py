@@ -70,7 +70,7 @@ def admin_required(view_func):
 @admin_required
 @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
 def usuario_list(request):
-    usuarios = User.objects.all()
+    usuarios = User.objects.all().order_by('id')
     return render(request, 'vista_usuarios.html', {'usuarios': usuarios})
 
 from django.contrib.auth.models import User, Group
@@ -96,7 +96,7 @@ def crear_usuario(request):
         grupo = Group.objects.get(name=grupo_nombre)
         user.groups.add(grupo)
 
-        return redirect('home')
+        return redirect('usuario_list')
     return render(request, 'crear_usuario.html')
 
 @login_required
@@ -174,14 +174,44 @@ def registrar_cliente(request):
 
 @login_required
 @admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def producto_list(request):
+    productos = Producto.objects.all().order_by('id')
+    return render(request, 'producto.html', {'productos': productos})
+
+@login_required
+@admin_required
 def registrar_producto(request):
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         descripcion = request.POST.get('descripcion')
         precio = request.POST.get('precio')
         Producto.objects.create(nombre=nombre, descripcion=descripcion, precio=precio)
-        return redirect('home')
-    return render(request, 'producto.html')
+        return redirect('producto')
+    return render(request, 'crear_producto.html')
+
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def editar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+
+    if request.method == 'POST':
+        producto.nombre = request.POST.get('nombre')
+        producto.descripcion = request.POST.get('descripcion')
+        producto.precio = request.POST.get('precio')
+        producto.save()
+        return redirect('producto')
+
+    return render(request, 'editar_producto.html', {'producto': producto})
+
+@login_required
+@admin_required
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
+def borrar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    producto.delete()
+    return redirect('producto')
 
 @login_required
 def registrar_factura(request):
