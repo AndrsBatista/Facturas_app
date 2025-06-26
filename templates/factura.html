@@ -3,7 +3,7 @@
 {% block title %}Crear Factura{% endblock %}
 
 {% block content %}
-    <h1 class="mb-4">Factura</h1>
+    <h1 class="mb-4">Registro de Facturas</h1>
 
     <form method="post" class="needs-validation" novalidate>
         {% csrf_token %}
@@ -30,6 +30,9 @@
                         <option value="{{ producto.id }}">{{ producto.nombre }} - RD${{ producto.precio}}</option>
                     {% endfor %}
                 </select>
+                <div class="invalid-feedback">
+                    Por favor, seleccione mínimo un producto.
+                </div>
                 <label class="form-label mt-2">Cantidad:</label>
                 <input type="number" name="cantidades[]" min="1" class="form-control" required>
             </div>

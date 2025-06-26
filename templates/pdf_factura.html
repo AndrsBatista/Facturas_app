@@ -30,12 +30,12 @@
                 <td>{{ detalle.producto.nombre }}</td>
                 <td>{{ detalle.cantidad }}</td>
                 <td>${{ detalle.producto.precio }}</td>
-                <td>Unidades: {{ detalle.cantidad }} <br> || Total RD$: {{ detalle.subtotal }}</td> <br>
+                <td>Unidades: {{ detalle.cantidad }} <br> || Sub: {{ detalle.subtotal }} RD$</td> <br>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <p><strong>Total:</strong> ${{ factura.total }}</p>
+    <p><strong>Total: {{ factura.total }} RD$</strong></p>
 </body>
 </html>

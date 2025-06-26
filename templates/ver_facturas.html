@@ -17,6 +17,7 @@
                                 <strong>Cédula:</strong> {{ factura.cliente.rnc }}
                             </p>
                             <p class="card-text mb-1"><strong>Fecha de emisión:</strong> {{ factura.fecha_emision }}</p>
+                            <strong>Emisor de la factura:</strong> {{ factura.usuario }} <br>
                             <p class="card-text mb-1"><strong>Cantidad de Productos:</strong> {{ factura.cantidad_productos }}</p>
                             <p class="card-text mb-3"><strong>Total:</strong> ${{ factura.total }}</p>
                             <h6>Productos:</h6>

@@ -223,7 +223,12 @@ def registrar_factura(request):
 
         cliente = Cliente.objects.get(id=cliente_id)
         total = Decimal('0.00') 
-        factura = Factura.objects.create(cliente=cliente, fecha_emision=now().date(), total=0)
+        factura = Factura.objects.create(
+            cliente=cliente,
+            fecha_emision=now().date(),
+            total=0,
+            usuario=request.user
+            )
 
         cantidades = [Decimal(cantidad) for cantidad in cantidades]
 
@@ -246,7 +251,10 @@ def registrar_factura(request):
 
 @login_required
 def ver_facturas(request):
-    facturas = Factura.objects.all().prefetch_related('detallefactura_set', 'cliente')
+    if request.user.groups.filter(name='Admins').exists() or request.user.is_superuser:
+        facturas = Factura.objects.all()
+    else:
+        facturas = Factura.objects.filter(usuario=request.user)
 
     for factura in facturas:
         total_productos = sum(detalle.cantidad for detalle in factura.detallefactura_set.all())
