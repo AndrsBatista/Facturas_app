@@ -1,17 +1,25 @@
 {% extends 'base.html' %}
-
-{% load static%}
-
+{% load static %}
 {% block title %}Vista de Usuarios{% endblock %}
 
 {% block content %}
+
 <div class="container mt-5">
     <h1 class="mb-4">Usuarios Registrados</h1>
+    <form method="get" class="mb-4">
+        <label for="grupo" class="form-label">Filtrar por grupo:</label>
+        <select name="grupo" id="grupo" class="form-select w-auto d-inline-block" onchange="this.form.submit()">
+            <option value="" {% if not grupo_actual %}selected{% endif %}>Todos</option>
+            <option value="UsuariosNormales" {% if grupo_actual == "UsuariosNormales" %}selected{% endif %}>Usuarios Normales</option>
+            <option value="Admins" {% if grupo_actual == "Admins" %}selected{% endif %}>Admins</option>
+        </select>
+    </form>
+
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Nombre de Usuario</th>
+                <th>Usuario</th>
                 <th>Rol</th>
                 <th>Acciones</th>
             </tr>
@@ -37,10 +45,12 @@
             {% endfor %}
         </tbody>
     </table>
+
     <div class="text-center mt-4">
         <a href="{% url 'crear_usuario' %}" class="btn btn-primary">Crear Nuevo Usuario</a>
     </div>
 </div>  
+
 <a href="/" class="btn btn-link mt-3">Volver al inicio</a>
 
 {% endblock %}

@@ -70,8 +70,18 @@ def admin_required(view_func):
 @admin_required
 @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
 def usuario_list(request):
-    usuarios = User.objects.all().order_by('id')
-    return render(request, 'vista_usuarios.html', {'usuarios': usuarios})
+    grupo = request.GET.get('grupo')
+    if grupo == 'UsuariosNormales':
+        usuarios = User.objects.filter(groups__name='UsuariosNormales')
+    elif grupo == 'Admins':
+        usuarios = User.objects.filter(groups__name='Admins')
+    else:
+        usuarios = User.objects.all()
+
+    return render(request, 'vista_usuarios.html', {
+        'usuarios': usuarios,
+        'grupo_actual': grupo
+    })
 
 from django.contrib.auth.models import User, Group
 @login_required
@@ -80,10 +90,11 @@ from django.contrib.auth.models import User, Group
 def crear_usuario(request):
     if request.method == 'POST':
         username = request.POST['username']
+        nombre = request.POST['nombre']
         password = request.POST['password']
         grupo_nombre = request.POST['grupo']
 
-        user = User.objects.create_user(username=username, password=password)
+        user = User.objects.create_user(username=username, nombre=nombre, password=password)
 
         if grupo_nombre == 'Admins':
             user.is_staff = True
@@ -99,6 +110,7 @@ def crear_usuario(request):
         return redirect('usuario_list')
     return render(request, 'crear_usuario.html')
 
+
 @login_required
 @admin_required
 @user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Admins').exists())
@@ -107,12 +119,15 @@ def editar_usuario(request, user_id):
 
     if request.method == 'POST':
         username = request.POST['username']
+        nombre = request.POST['nombre']
         password = request.POST['password']
         grupo_nombre = request.POST['grupo']
 
         usuario.username = username
         if password:
             usuario.set_password(password)
+
+        usuario.nombre = nombre
 
         if grupo_nombre == 'Admins':
             usuario.is_staff = True
@@ -160,7 +175,7 @@ def registrar_cliente(request):
             })
         
 
-        # Verificar si el RNC ya existe
+        #Verificar si el RNC ya existe
         if Cliente.objects.filter(rnc=rnc).exists():
             return render(request, 'cliente.html', {
                 'error': 'Ya existe un cliente con este RNC. Por favor, ingrese otro.',
@@ -320,3 +335,4 @@ def generar_pdf_factura(request, factura_id):
     if pisa_status.err:
         return HttpResponse('Error al generar PDF', status=500)
     return response
+

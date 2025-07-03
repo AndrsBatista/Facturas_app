@@ -16,6 +16,11 @@
         </div>
 
         <div class="mb-3">
+            <label for="nombre" class="form-label" style="color: black">Nombre Completo:</label>
+            <input type="text" name="nombre" class="form-control" value="{{ usuario.nombre }}" required>
+        </div>
+
+        <div class="mb-3">
             <label for="password" class="form-label" style="color: black">Nueva Contraseña (opcional):</label>
             <input type="password" name="password" class="form-control" placeholder="Dejar en blanco para mantener la actual">
         </div>
