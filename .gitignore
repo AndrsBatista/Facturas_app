@@ -11,7 +11,3 @@ db.sqlite3
 /static/
 /media/
 
-
-.docker/
-# Si usas volúmenes locales para la DB, ignora la carpeta de datos:
-postgres_data/
